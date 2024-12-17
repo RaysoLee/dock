@@ -9,6 +9,9 @@ on:
         description: '手动运行工作流'
         required: true
         default: 'true'
+  push:
+    branches:
+      - main  # 监听 GitHub 仓库的主分支（或您选择的分支）
         
 jobs:
   # build:
