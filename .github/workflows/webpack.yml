@@ -24,12 +24,16 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Run install
-      uses: borales/actions-yarn@v4
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v2
       with:
-        cmd: install
-    - name: Run genarate
-      uses: borales/actions-yarn@v4
+        version: '7.x'
+    # Install dependencies using pnpm
+    - name: Install dependencies
+      run: pnpm install
+
+    # Run build command (if any)
+    - name: Run build
       env:
           MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
           COMPANY_NAME: ${{ secrets.COMPANY_NAME }}
@@ -37,13 +41,8 @@ jobs:
           SHOPIFY_REVALIDATION_SECRET: ${{ secrets.SHOPIFY_REVALIDATION_SECRET }}
           SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
           SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
-      with:
-        cmd: build
-    - name: Collect Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: website-ssg
-        path: website/dist
+      run: pnpm run build
+
   # notify:
   #   runs-on: ubuntu-latest
   #   needs: [build]  
