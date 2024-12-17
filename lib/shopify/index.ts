@@ -95,7 +95,7 @@ export async function shopifyFetch<T>({
     }
     const result = await fetch(endpoint, options);
 
-    const body = await result.json();
+    const body = await result.json() as T & { errors?: { message: string }[] };
 
     if (body.errors) {
       throw body.errors[0];
