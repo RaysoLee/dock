@@ -24,7 +24,7 @@ export const metadata = {
     index: true
   },
 };
-
+console.log("process.env.NODE_ENV", process.env.NODE_ENV)
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const cartId = (await cookies()).get('cartId')?.value;
   // Don't await the fetch, pass the Promise to the context provider
