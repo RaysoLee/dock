@@ -1,12 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: websiteCI
-
-#on:
-#  push:
-#    branches: [ "master" ]
-  # 当有 push 操作到主分支时触发（PR 合并后）
+name: CI/CD Workflow
 on:
   workflow_dispatch:
     inputs:
@@ -35,8 +30,15 @@ jobs:
         cmd: install
     - name: Run genarate
       uses: borales/actions-yarn@v4
+      env:
+          MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
+          COMPANY_NAME: ${{ secrets.COMPANY_NAME }}
+          SITE_NAME: ${{ secrets.SITE_NAME }}
+          SHOPIFY_REVALIDATION_SECRET: ${{ secrets.SHOPIFY_REVALIDATION_SECRET }}
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
       with:
-        cmd: website-generate
+        cmd: build
     - name: Collect Artifact
       uses: actions/upload-artifact@v4
       with:
