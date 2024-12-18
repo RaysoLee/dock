@@ -22,5 +22,4 @@ export default {
     }
     return config;
   },
-  output: 'standalone',
 };
