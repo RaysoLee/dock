@@ -4,7 +4,6 @@ import { ensureStartsWith } from 'lib/utils';
 import { revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import fetch from 'node-fetch';
 import {
   addToCartMutation,
   createCartMutation,
@@ -74,9 +73,12 @@ export async function shopifyFetch<T>({
 }): Promise<{ status: number; body: T } | never> {
   try {
     let agent;
-    if(process.env.NODE_ENV === 'development'){
+    let fetchFn: any = fetch;
+    if(process.env.HTTPS_PROXY){
+      const nodeFetch = await import('node-fetch');
+      fetchFn = nodeFetch.default 
       const { HttpsProxyAgent } = require('https-proxy-agent')
-      agent = process.env.NODE_ENV === 'development' ? new HttpsProxyAgent('http://127.0.0.1:7890') : undefined
+      agent = new HttpsProxyAgent(process.env.HTTPS_PROXY)
     }
     const options = {
       method: 'POST',
@@ -93,7 +95,7 @@ export async function shopifyFetch<T>({
       cache,
       ...(tags && { next: { tags } })
     }
-    const result = await fetch(endpoint, options);
+    const result = await fetchFn(endpoint, options);
 
     const body = await result.json() as T & { errors?: { message: string }[] };
 
