@@ -74,9 +74,9 @@ export async function shopifyFetch<T>({
   try {
     let agent;
     let fetchFn: any = fetch;
-    if(process.env.HTTPS_PROXY){
+    if (process.env.HTTPS_PROXY) {
       const nodeFetch = await import('node-fetch');
-      fetchFn = nodeFetch.default 
+      fetchFn = nodeFetch.default
       const { HttpsProxyAgent } = require('https-proxy-agent')
       agent = new HttpsProxyAgent(process.env.HTTPS_PROXY)
     }

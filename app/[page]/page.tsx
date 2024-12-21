@@ -9,7 +9,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const page = await getPage(params.page);
-
+  console.log(params, page)
   if (!page) return notFound();
 
   return {

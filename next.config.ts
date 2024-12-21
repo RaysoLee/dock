@@ -9,4 +9,5 @@ export default {
       }
     ]
   },
+  output: 'export',
 };

@@ -1,8 +1,8 @@
 'use client';
-
+import Cookies from 'js-cookie';
+import { getCart } from 'lib/shopify';
 import type { Cart, CartItem, Product, ProductVariant } from 'lib/shopify/types';
 import React, { createContext, use, useContext, useMemo, useOptimistic } from 'react';
-
 type UpdateType = 'plus' | 'minus' | 'delete';
 
 type CartAction =
@@ -145,14 +145,16 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
   }
 }
 
-export function CartProvider({
+export async function CartProvider({
   children,
-  cartPromise
+  // cartPromise
 }: {
   children: React.ReactNode;
-  cartPromise: Promise<Cart | undefined>;
+  // cartPromise: Promise<Cart | undefined>;
 }) {
-  const initialCart = use(cartPromise);
+  const cartId = Cookies.get('cartId');
+  const cart = getCart(cartId);
+  const initialCart = use(cart);
   const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
 
   const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
